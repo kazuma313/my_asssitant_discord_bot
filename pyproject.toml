@@ -1,0 +1,12 @@
+[project]
+name = "my-asssitant-discord-bot"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "zul",
+]
+
+[tool.uv.sources]
+zul = { git = "https://github.com/kazuma313/zul_utilities.git", rev = "development" }
