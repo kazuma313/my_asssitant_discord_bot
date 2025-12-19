@@ -1,22 +1,41 @@
 DEFAULT_REPORT_STRUCTURE = """The report structure should focus on breaking-down the user-provided topic
-                              and building a comprehensive report in markdown using the following format:
+and building a comprehensive report in markdown using the following format:
 
-                              1. Introduction (no web search needed)
-                                    - Brief overview of the topic area
+1. Introduction (no web search needed)
+      - Brief overview of the topic area
 
-                              2. Main Body Sections:
-                                    - Each section should focus on a sub-topic of the user-provided topic
-                                    - Include any key concepts and definitions
-                                    - Provide real-world examples or case studies where applicable
+2. Main Body Sections:
+      - Each section should focus on a sub-topic of the user-provided topic
+      - Include any key concepts and definitions
+      - Provide real-world examples or case studies where applicable
 
-                              3. Conclusion (no web search needed)
-                                    - Aim for 1 structural element (either a list of table) that distills the main body sections
-                                    - Provide a concise summary of the report
+3. Conclusion (no web search needed)
+      - Aim for 1 structural element (either a list of table) that distills the main body sections
+      - Provide a concise summary of the report
 
-                              When generating the final response in markdown, if there are special characters in the text,
-                              such as the dollar symbol, ensure they are escaped properly for correct rendering e.g $25.5 should become \$25.5
-                          """
-                          
+When generating the final response in markdown, if there are special characters in the text,
+such as the dollar symbol, ensure they are escaped properly for correct rendering e.g $25.5 should become \$25.5
+"""
+
+
+REPORT_PLAN_QUERY_GENERATOR_PROMPT = """You are an expert technical report writer, helping to plan a report.
+
+The report will be focused on the following topic:
+{topic}
+
+The report structure will follow these guidelines:
+{report_organization}
+
+Your goal is to generate {number_of_queries} search queries that will help gather comprehensive information for planning the report sections.
+
+The query should:
+1. Be related to the topic
+2. Help satisfy the requirements specified in the report organization
+
+Make the query specific enough to find high-quality, relevant sources while covering the depth and breadth needed for the report structure.
+"""
+
+
 
 REPORT_PLAN_SECTION_GENERATOR_PROMPT = """You are an expert technical report writer, helping to plan a report.
 
@@ -40,6 +59,7 @@ Now, generate the sections of the report. Each section should have the following
 Consider which sections require web search.
 For example, introduction and conclusion will not require research because they will distill information from other parts of the report.
 """
+
 
 
 REPORT_SECTION_QUERY_GENERATOR_PROMPT = """Your goal is to generate targeted web search queries that will gather comprehensive information for writing a technical report section.
@@ -171,3 +191,4 @@ For Conclusion/Summary:
 - Do not include word count or any preamble in your response
 - If there are special characters in the text, such as the dollar symbol,
   ensure they are escaped properly for correct rendering e.g $25.5 should become \$25.5"""
+                          
