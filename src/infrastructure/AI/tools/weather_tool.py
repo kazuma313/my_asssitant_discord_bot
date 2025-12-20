@@ -1,5 +1,6 @@
 from langchain_core.tools import tool
 
+
 @tool
 def get_weather(location: str):
     """Call to get the weather from a specific location."""

@@ -36,7 +36,6 @@ Make the query specific enough to find high-quality, relevant sources while cove
 """
 
 
-
 REPORT_PLAN_SECTION_GENERATOR_PROMPT = """You are an expert technical report writer, helping to plan a report.
 
 Your goal is to generate the outline of the sections of the report.
@@ -59,7 +58,6 @@ Now, generate the sections of the report. Each section should have the following
 Consider which sections require web search.
 For example, introduction and conclusion will not require research because they will distill information from other parts of the report.
 """
-
 
 
 REPORT_SECTION_QUERY_GENERATOR_PROMPT = """Your goal is to generate targeted web search queries that will gather comprehensive information for writing a technical report section.
@@ -191,4 +189,3 @@ For Conclusion/Summary:
 - Do not include word count or any preamble in your response
 - If there are special characters in the text, such as the dollar symbol,
   ensure they are escaped properly for correct rendering e.g $25.5 should become \$25.5"""
-                          

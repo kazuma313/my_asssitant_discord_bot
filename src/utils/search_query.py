@@ -20,7 +20,7 @@ tavily_search = TavilySearchAPIWrapper()
 async def run_search_queries(
     search_queries: List[Union[str, SearchQuery]],
     num_results: int = 5,
-    include_raw_content: bool = False
+    include_raw_content: bool = False,
 ) -> List[Dict]:
 
     search_tasks = []
@@ -30,7 +30,9 @@ async def run_search_queries(
         # Just in case LLM fails to generate queries as:
         # class SearchQuery(BaseModel):
         #     search_query: str
-        query_str = query.search_query if isinstance(query, SearchQuery) else str(query) # text query
+        query_str = (
+            query.search_query if isinstance(query, SearchQuery) else str(query)
+        )  # text query
 
         try:
             # get results from tavily asynchronously (in parallel) for each search query
@@ -38,9 +40,9 @@ async def run_search_queries(
                 tavily_search.raw_results_async(
                     query=query_str,
                     max_results=num_results,
-                    search_depth='advanced',
+                    search_depth="advanced",
                     include_answer=False,
-                    include_raw_content=include_raw_content
+                    include_raw_content=include_raw_content,
                 )
             )
         except Exception as e:
@@ -53,22 +55,17 @@ async def run_search_queries(
             return []
         search_docs = await asyncio.gather(*search_tasks, return_exceptions=True)
         # Filter out any exceptions from the results
-        valid_results = [
-            doc for doc in search_docs
-            if not isinstance(doc, Exception)
-        ]
+        valid_results = [doc for doc in search_docs if not isinstance(doc, Exception)]
         return valid_results
     except Exception as e:
         print(f"Error during search queries: {e}")
         return []
-    
-    
 
 
 def format_search_query_results(
     search_response: Union[Dict[str, Any], List[Any]],
     max_tokens: int = 2000,
-    include_raw_content: bool = False
+    include_raw_content: bool = False,
 ) -> str:
     encoding = tiktoken.encoding_for_model("gpt-4")
     sources_list = []
@@ -76,16 +73,16 @@ def format_search_query_results(
     # Handle different response formats
     # if search results is a dict
     if isinstance(search_response, dict):
-        if 'results' in search_response:
-            sources_list.extend(search_response['results'])
+        if "results" in search_response:
+            sources_list.extend(search_response["results"])
         else:
             sources_list.append(search_response)
     # if search results is a list
     elif isinstance(search_response, list):
         for response in search_response:
             if isinstance(response, dict):
-                if 'results' in response:
-                    sources_list.extend(response['results'])
+                if "results" in response:
+                    sources_list.extend(response["results"])
                 else:
                     sources_list.append(response)
             elif isinstance(response, list):
@@ -97,9 +94,9 @@ def format_search_query_results(
     # Deduplicate by URL and keep unique sources (website urls)
     unique_sources = {}
     for source in sources_list:
-        if isinstance(source, dict) and 'url' in source:
-            if source['url'] not in unique_sources:
-                unique_sources[source['url']] = source
+        if isinstance(source, dict) and "url" in source:
+            if source["url"] not in unique_sources:
+                unique_sources[source["url"]] = source
 
     # Format output
     formatted_text = "Content from web search:\n\n"
