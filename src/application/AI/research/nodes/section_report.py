@@ -2,14 +2,14 @@ from langgraph.graph import StateGraph, START, END
 from langchain.messages import HumanMessage, SystemMessage
 import logging
 from .search_web import many_search_formatted
-from .....domain.entities.agents.research.research import SectionState, SectionOutputState, Queries
-from .....domain.templates.prompt.research.research_prompt_templates import (
+from src.domain.entities.agents.research.research import SectionState, SectionOutputState, Queries
+from src.domain.templates.prompt.research.research_prompt_templates import (
     REPORT_SECTION_QUERY_GENERATOR_PROMPT,  
     SECTION_WRITER_PROMPT
     )
 
 
-from infrastructure.AI.models.llm import get_llm_model
+from src.infrastructure.AI.models.llm import get_llm_model
 llm = get_llm_model(temperature=0.1)
 
 def generate_queries(state: SectionState):

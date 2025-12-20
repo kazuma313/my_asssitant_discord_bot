@@ -1,5 +1,5 @@
 from langgraph.types import Send
-from .....domain.entities.agents.research.research import ReportState
+from src.domain.entities.agents.research.research import ReportState
 
 def parallelize_section_writing(state: ReportState):
     """ This is the "map" step when we kick off web research for some sections of the report in parallel and then write the section"""

@@ -3,7 +3,7 @@ from .nodes.report_generation import generate_report_plan
 from .nodes.section_report import section_builder_subagent
 from .nodes.report_generation import format_completed_sections, write_final_sections, compile_final_report
 from langgraph.graph import StateGraph, START, END
-from domain.entities.agents.research.research import ReportState, ReportStateInput, ReportStateOutput
+from src.domain.entities.agents.research.research import ReportState, ReportStateInput, ReportStateOutput
 
 builder = StateGraph(ReportState, input_schema=ReportStateInput, output_schema=ReportStateOutput)
 builder.add_node("generate_report_plan", generate_report_plan)

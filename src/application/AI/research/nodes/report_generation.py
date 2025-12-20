@@ -1,7 +1,7 @@
 from langchain.messages import HumanMessage, SystemMessage
 import logging
 from .search_web import many_search_formatted
-from .....domain.entities.agents.research.research import (
+from src.domain.entities.agents.research.research import (
     Section, 
     SearchQuery,
     Sections,
@@ -10,14 +10,14 @@ from .....domain.entities.agents.research.research import (
     SectionState
     )
 
-from domain.templates.prompt.research.research_prompt_templates import (
+from src.domain.templates.prompt.research.research_prompt_templates import (
     DEFAULT_REPORT_STRUCTURE,
     REPORT_PLAN_QUERY_GENERATOR_PROMPT,
     REPORT_PLAN_SECTION_GENERATOR_PROMPT,
     FINAL_SECTION_WRITER_PROMPT
     )
 
-from infrastructure.AI.models.llm import get_llm_model
+from src.infrastructure.AI.models.llm import get_llm_model
 llm = get_llm_model(temperature=0.1)
 
 
