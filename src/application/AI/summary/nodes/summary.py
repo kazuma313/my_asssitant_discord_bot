@@ -3,7 +3,7 @@ from langchain_classic.chains.combine_documents.reduce import (
     split_list_of_docs,
 )
 from src.domain.templates.prompt.summary_prompt_templates import map_prompt
-from src.domain.entities.agents.summary import SummaryState, OverallState
+from src.domain.entities.agents.summary_entities import SummaryState, OverallState
 from src.infrastructure.AI.models.llm import get_llm_model
 from .utils import length_function, token_max, _reduce
 from langchain_core.documents import Document

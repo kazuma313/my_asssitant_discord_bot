@@ -6,7 +6,7 @@ from .nodes.summary import (
     generate_final_summary,
     should_collapse,
 )
-from src.domain.entities.agents.summary import OverallState
+from src.domain.entities.agents.summary_entities import OverallState
 from .nodes.paralel_execution import map_summaries
 from langgraph.graph import START, END
 

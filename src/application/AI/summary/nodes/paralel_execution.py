@@ -1,4 +1,4 @@
-from src.domain.entities.agents.summary import OverallState
+from src.domain.entities.agents.summary_entities import OverallState
 from langgraph.types import Send
 
 

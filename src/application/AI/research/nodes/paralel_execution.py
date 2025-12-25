@@ -1,5 +1,5 @@
 from langgraph.types import Send
-from src.domain.entities.agents.research.research import ReportState
+from src.domain.entities.agents.research_entites import ReportState
 
 
 def parallelize_section_writing(state: ReportState):

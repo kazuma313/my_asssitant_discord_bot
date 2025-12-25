@@ -10,7 +10,7 @@ from .nodes.report_generation import (
     compile_final_report,
 )
 from langgraph.graph import StateGraph, START, END
-from src.domain.entities.agents.research.research import (
+from src.domain.entities.agents.research_entites import (
     ReportState,
     ReportStateInput,
     ReportStateOutput,

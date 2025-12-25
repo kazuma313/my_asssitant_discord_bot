@@ -1,14 +1,14 @@
-from src.application.usecases.research import research as resaerch_usecase
-from src.application.usecases.youtube_summary import youtube_summary
 from .message import send_summary_to_users, send_research_to_users
-from src.application.services.keep_alive import keep_alive
+from src.application.usecases.research_topic import research_topic
+from src.application.usecases.youtube_summary import youtube_summary
+# from src.application.services.keep_alive import keep_alive
 from markdown_pdf import MarkdownPdf, Section
 from discord.ext import commands
 from dotenv import load_dotenv
 import discord
 import os
 
-keep_alive()
+# keep_alive()
 load_dotenv()
 
 secret_role = "explorer"
@@ -28,7 +28,7 @@ bot = commands.Bot(command_prefix="/", description=description, intents=intents)
 
 @bot.event
 async def on_ready():
-    print(f"We are ready to go in, {bot.user.name}")
+    print("We are ready to go")
     try:
         synced = await bot.tree.sync()
         print(f"Synced {len(synced)} command(s)")
@@ -55,9 +55,10 @@ async def on_message(message):
 
 # Command: Simple greeting
 @bot.tree.command(
-    name="chat_ai", description="Sends a friendly hello message to the user"
+    name="chat_ai", description="chat ai about tips and trick of tehcnology"
 )
-async def chat_ai(interaction: discord.Interaction):
+async def chat_ai(interaction: discord.Interaction, question: str):
+    await interaction.response.send_message(f"Processing your question: {question}", ephemeral=True)
     await interaction.response.send_message(
         f"Hello {interaction.user.mention}! How can I assist you today?"
     )
@@ -67,7 +68,7 @@ async def chat_ai(interaction: discord.Interaction):
 async def research(interaction: discord.Interaction, topic: str, pdf_name: str):
     try:
         await interaction.response.defer(ephemeral=False)
-        result_research = await resaerch_usecase(topic)
+        result_research = await research_topic(topic)
         pdf.add_section(Section(result_research))
         pdf.meta["title"] = topic
         pdf.meta["author"] = "Kurnia Zulda"

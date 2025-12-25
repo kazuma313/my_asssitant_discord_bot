@@ -2,12 +2,12 @@ from langgraph.graph import StateGraph, START, END
 from langchain.messages import HumanMessage, SystemMessage
 import logging
 from .search_web import many_search_formatted
-from src.domain.entities.agents.research import (
+from src.domain.entities.agents.research_entites import (
     SectionState,
     SectionOutputState,
     Queries,
 )
-from domain.templates.prompt.research_prompt_templates import (
+from src.domain.templates.prompt.research_prompt_templates import (
     REPORT_SECTION_QUERY_GENERATOR_PROMPT,
     SECTION_WRITER_PROMPT,
 )
