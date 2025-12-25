@@ -7,7 +7,6 @@ import json
 import re
 
 
-
 class YouTubeTranscriptPreprocessor:
     def __init__(self):
         # Daftar kata-kata filler dan interjeksi yang umum dalam bahasa Indonesia
@@ -226,7 +225,7 @@ class YouTubeTranscriptPreprocessor:
 
         # Step 7: Segmentasi kalimat (opsional)
         if segment_sentences:
-            return self.segment_into_sentences(processed_text) # type: ignore
+            return self.segment_into_sentences(processed_text)  # type: ignore
 
         return processed_text
 
@@ -243,7 +242,8 @@ class YouTubeTranscriptPreprocessor:
                 ((orig_words - proc_words) / orig_words) * 100, 2
             ),
         }
-    
+
+
 def load_youtube_transcript(url: str, max_attempts: int = 5) -> Dict:
     """
     Load transcript from YouTube video URL with retry mechanism.
@@ -260,24 +260,23 @@ def load_youtube_transcript(url: str, max_attempts: int = 5) -> Dict:
     logging.info(f"Loading YouTube transcript from URL: {url}")
     while attempt < max_attempts:
         url_youtube = url
-        headers = {
-            "Content-Type": "application/json"
-        }
-        data = {
-            "url": url_youtube
-        }
+        headers = {"Content-Type": "application/json"}
+        data = {"url": url_youtube}
 
         response = requests.post(url_hook, headers=headers, json=data)
-        logging.info(f"status request youtube transcipt: {response.status_code} for url: {url}")
+        logging.info(
+            f"status request youtube transcipt: {response.status_code} for url: {url}"
+        )
         attempt += 1
         if len(response.text) > 1:
             return json.loads(response.text)
         else:
             continue
-        
+
     logging.error(f"Failed to load transcript after {max_attempts} attempts")
     return {}
-    
+
+
 # def get_youtube_metadata(url: str) -> dict:
 #     """
 #     Get metadata from YouTube video URL.
@@ -299,7 +298,7 @@ def load_youtube_transcript(url: str, max_attempts: int = 5) -> Dict:
 #     # Example usage
 #     url = "https://youtu.be/tyN89bZ5MpE?si=PWsGDOjcDzrnqDyx"
 #     metadata = get_youtube_metadata(url)
-    # print(metadata)
+# print(metadata)
 
 # Contoh penggunaan
 if __name__ == "__main__":
@@ -356,7 +355,3 @@ if __name__ == "__main__":
     print("=== STATISTICS ===")
     for key, value in stats.items():
         print(f"{key}: {value}")
-
-
-
-
