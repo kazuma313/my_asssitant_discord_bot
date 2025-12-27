@@ -10,6 +10,7 @@ the summary must be the key points of the text.
 If found different topics, summarize each topic separately.
 maximum 200 words.
 the result of the summary must be in Indonesian language.
+please be mind full for the important terms of the content, make simple gloassary for the terms.
 think carefully before you write the summary and make sure you get the important points of information.
 """
 
@@ -23,6 +24,7 @@ make sure the summary output on markdown format.
 seperate each topic with different heading.
 the summary must only maximum 250 words, so make sure you just get the important points of information.
 the summary must be in Indonesian language.
+each glossary shuould be unorderd list each of them, so the reader easy to read.
 think carefully before you write the summary and make sure you get the important points of information.
 """
 

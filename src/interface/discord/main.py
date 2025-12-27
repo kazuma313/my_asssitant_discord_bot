@@ -3,14 +3,14 @@ from src.application.usecases.calling_agent import (research_topic,
                                                     youtube_summary,
                                                     free_chat,
                                                     klasifikasi_bad_word)
-from src.application.services.keep_alive import keep_alive
+# from src.application.services.keep_alive import keep_alive
 from markdown_pdf import MarkdownPdf, Section
 from discord.ext import commands
 from dotenv import load_dotenv
 import discord
 import os
 
-keep_alive()
+# keep_alive()
 load_dotenv()
 
 secret_role = "explorer"

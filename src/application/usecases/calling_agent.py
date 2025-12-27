@@ -15,9 +15,13 @@ async def call_agent(agent, param, config={"recursion_limit": 50}):
 
 async def youtube_summary(youtube_url: str):
     preprocessor = YouTubeTranscriptPreprocessor()
-    # param = {"youtube_url": youtube_url}
     docs = load_youtube_transcript(youtube_url)
+    print("--------------")
     youtube_content = " ".join(docs.get("transcript", "")).strip()
+    print("youtube transcipt: ", youtube_content)
+    
+    if youtube_content == "no transcript found":
+        raise ValueError("No transcipt found from youtube url. - ", youtube_content)
 
     youtube_content = preprocessor.preprocess(
         youtube_content,
