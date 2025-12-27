@@ -1,11 +1,13 @@
-from .message import send_summary_to_users, send_research_to_users
+from .message import (send_summary_to_users, 
+                      send_research_to_users, 
+                      bot, 
+                      handle_bad_words, 
+                      handle_ai_chat)
 from src.application.usecases.calling_agent import (research_topic, 
                                                     youtube_summary,
-                                                    free_chat,
-                                                    klasifikasi_bad_word)
+                                                    free_chat)
 from src.application.services.keep_alive import keep_alive
 from markdown_pdf import MarkdownPdf, Section
-from discord.ext import commands
 from dotenv import load_dotenv
 import discord
 import os
@@ -13,20 +15,7 @@ import os
 keep_alive()
 load_dotenv()
 
-secret_role = "explorer"
-
-intents = discord.Intents.default()
-intents.message_content = True
-intents.members = True
-
-description = """An example bot to showcase the discord.ext.commands extension
-module.
-
-There are a number of utility commands being showcased here."""
-
 pdf = MarkdownPdf(toc_level=2, optimize=True)
-bot = commands.Bot(command_prefix="/", description=description, intents=intents)
-
 
 @bot.event
 async def on_ready():
@@ -41,53 +30,21 @@ async def on_ready():
 @bot.event
 async def on_member_join(member):
     await member.channel.send(f"Welcome to the server {member.name}")
-    
+  
 
 @bot.event
 async def on_message(message):
+    # Abaikan pesan dari bot itu sendiri
     if message.author == bot.user:
         return
-
     print("-----------")
-    print(f"Content dibaca: '{message.content}'") 
+    print(f"Content dibaca: '{message.content}'")
 
-    # 1. Filter Bad Word dengan tambahan pengecekan
-    try:
-        print("Sedang mengecek bad word...")
-        # Tambahkan timeout jika fungsi AI memakan waktu terlalu lama
-        is_bad_word = await klasifikasi_bad_word(text_to_check=message.content)
-        print(f"Hasil klasifikasi: '{is_bad_word}'")
-    except Exception as e:
-        print(f"Error di fungsi klasifikasi_bad_word: {e}")
-        is_bad_word = "no" # Default ke 'no' jika error agar bot tidak stuck
+    was_bad_word = await handle_bad_words(message)
+    if was_bad_word:
+        return # Berhenti di sini jika pesan sudah dihapus
 
-    if str(is_bad_word).lower() == "yes":
-        try:
-            await message.delete()
-            await message.channel.send(f"Please mind your manner!!! - {message.author.mention}")
-            print("Pesan buruk dihapus.")
-        except Exception as e:
-            print(f"Gagal menghapus/mengirim pesan peringatan: {e}")
-        return 
-
-    # 2. Fitur Chat AI (Tag/Mention)
-    if bot.user.mentioned_in(message): # type: ignore
-        print("Bot di-mention, memproses jawaban...")
-        clean_content = message.content.replace(f'<@!{bot.user.id}>', '').replace(f'<@{bot.user.id}>', '').strip() # type: ignore
-        
-        if clean_content == "":
-            await message.channel.send(f"Halo {message.author.mention}! Ada yang bisa saya bantu?")
-        else:
-            loading_msg = await message.reply("⏳ Memproses pertanyaanmu...")
-            try:
-                ai_response = await free_chat(clean_content)
-                content_to_send = ai_response.content if hasattr(ai_response, 'content') else ai_response
-                await message.reply(str(content_to_send))
-                await loading_msg.delete() 
-            except Exception as e:
-                print(f"Error AI: {e}")
-                await loading_msg.edit(content="Maaf, terjadi kendala teknis.")
-
+    await handle_ai_chat(message)
     await bot.process_commands(message)
     
 
@@ -138,7 +95,7 @@ async def summary(interaction: discord.Interaction, url: str):
         await interaction.followup.send(f"{result['summary']}", ephemeral=False)
         await send_summary_to_users(interaction, url, result["summary"])
     except Exception as e:
-        await interaction.followup.send(f"An error occurred: {str(e)}", ephemeral=True)
+        await interaction.followup.send(f"An error occurred: {str(e)}", ephemeral=False)
 
 
 @bot.tree.command(

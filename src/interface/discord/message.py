@@ -1,5 +1,57 @@
 import discord
 import os
+from src.application.usecases.calling_agent import (free_chat,
+                                                    klasifikasi_bad_word)
+from discord.ext import commands
+
+description = """An example bot to showcase the discord.ext.commands extension
+module.
+
+There are a number of utility commands being showcased here."""
+secret_role = "explorer"
+
+intents = discord.Intents.default()
+intents.message_content = True
+intents.members = True
+bot = commands.Bot(command_prefix="/", description=description, intents=intents)
+
+  
+async def handle_bad_words(message):
+    """Mengurus pengecekan kata kasar dan penghapusan pesan."""
+    try:
+        print(f"Sedang mengecek bad word: '{message.content}'")
+        is_bad_word = await klasifikasi_bad_word(text_to_check=message.content)
+        
+        if str(is_bad_word).lower() == "yes":
+            await message.delete()
+            await message.channel.send(f"Please mind your manner!!! - {message.author.mention}")
+            print("Pesan buruk dihapus.")
+            return True # Berhasil mendeteksi bad word
+    except Exception as e:
+        print(f"Error di fungsi klasifikasi_bad_word: {e}")
+    
+    return False
+
+async def handle_ai_chat(message):
+    """Mengurus respons AI saat bot di-mention."""
+    if bot.user.mentioned_in(message): # type: ignore
+        print("Bot di-mention, memproses jawaban...")
+        # Bersihkan mention dari teks
+        clean_content = message.content.replace(f'<@!{bot.user.id}>', '').replace(f'<@{bot.user.id}>', '').strip()
+
+        if clean_content == "":
+            await message.channel.send(f"Halo {message.author.mention}! Ada yang bisa saya bantu?")
+            return
+
+        loading_msg = await message.reply("⏳ Memproses pertanyaanmu...")
+        try:
+            ai_response = await free_chat(clean_content)
+            content_to_send = ai_response.content if hasattr(ai_response, 'content') else ai_response
+            await message.reply(str(content_to_send))
+            await loading_msg.delete()
+        except Exception as e:
+            print(f"Error AI: {e}")
+            await loading_msg.edit(content="Maaf, terjadi kendala teknis.")
 
 
 async def send_summary_to_users(
@@ -18,7 +70,7 @@ async def send_summary_to_users(
 
     try:
         if message_config.is_primary_user(requester_name):
-            await _send_dm_to_user(interaction.user, url, summary, is_own_request=True)
+            await _send_dm_to_user(interaction.user, url, summary, is_own_request=True) # type: ignore
         else:
             await _send_to_multiple_users(interaction, url, summary, requester_name)
 
@@ -48,7 +100,7 @@ async def _send_to_multiple_users(
     """Send summary to both secondary users and requester."""
     for secondary_username in message_config.secondary_users:
         target_user = discord.utils.get(
-            interaction.guild.members, name=secondary_username
+            interaction.guild.members, name=secondary_username # type: ignore
         )
         if target_user:
             await target_user.send(f"Summary requested by {requester_name}: {url}")
@@ -57,7 +109,7 @@ async def _send_to_multiple_users(
         else:
             print(f"Could not find user {secondary_username}")
 
-    await _send_dm_to_user(interaction.user, url, summary, is_own_request=True)
+    await _send_dm_to_user(interaction.user, url, summary, is_own_request=True) # type: ignore
 
 
 async def send_research_to_users(
@@ -82,7 +134,7 @@ async def send_research_to_users(
             # Send to all secondary users (admins/special users)
             for target_username in message_config.secondary_users:
                 target_user = discord.utils.get(
-                    interaction.guild.members, name=target_username
+                    interaction.guild.members, name=target_username # type: ignore
                 )
                 if target_user:
                     await target_user.send(
