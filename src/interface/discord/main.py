@@ -3,14 +3,14 @@ from src.application.usecases.calling_agent import (research_topic,
                                                     youtube_summary,
                                                     free_chat,
                                                     klasifikasi_bad_word)
-# from src.application.services.keep_alive import keep_alive
+from src.application.services.keep_alive import keep_alive
 from markdown_pdf import MarkdownPdf, Section
 from discord.ext import commands
 from dotenv import load_dotenv
 import discord
 import os
 
-# keep_alive()
+keep_alive()
 load_dotenv()
 
 secret_role = "explorer"
@@ -71,9 +71,9 @@ async def on_message(message):
         return 
 
     # 2. Fitur Chat AI (Tag/Mention)
-    if bot.user.mentioned_in(message):
+    if bot.user.mentioned_in(message): # type: ignore
         print("Bot di-mention, memproses jawaban...")
-        clean_content = message.content.replace(f'<@!{bot.user.id}>', '').replace(f'<@{bot.user.id}>', '').strip()
+        clean_content = message.content.replace(f'<@!{bot.user.id}>', '').replace(f'<@{bot.user.id}>', '').strip() # type: ignore
         
         if clean_content == "":
             await message.channel.send(f"Halo {message.author.mention}! Ada yang bisa saya bantu?")
