@@ -1,6 +1,8 @@
 from .message import send_summary_to_users, send_research_to_users
-from src.application.usecases.research_topic import research_topic
-from src.application.usecases.youtube_summary import youtube_summary
+from src.application.usecases.calling_agent import (research_topic, 
+                                                    youtube_summary,
+                                                    free_chat,
+                                                    klasifikasi_bad_word)
 # from src.application.services.keep_alive import keep_alive
 from markdown_pdf import MarkdownPdf, Section
 from discord.ext import commands
@@ -38,30 +40,67 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
-    # await member.send(f"Welcome to the server {member.name}")
     await member.channel.send(f"Welcome to the server {member.name}")
-
+    
 
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
         return
-    if "shit" in message.content.lower():
-        await message.delete()
-        await message.channel.send(f"bad word detected from - {message.author.mention}")
+
+    print("-----------")
+    print(f"Content dibaca: '{message.content}'") 
+
+    # 1. Filter Bad Word dengan tambahan pengecekan
+    try:
+        print("Sedang mengecek bad word...")
+        # Tambahkan timeout jika fungsi AI memakan waktu terlalu lama
+        is_bad_word = await klasifikasi_bad_word(text_to_check=message.content)
+        print(f"Hasil klasifikasi: '{is_bad_word}'")
+    except Exception as e:
+        print(f"Error di fungsi klasifikasi_bad_word: {e}")
+        is_bad_word = "no" # Default ke 'no' jika error agar bot tidak stuck
+
+    if str(is_bad_word).lower() == "yes":
+        try:
+            await message.delete()
+            await message.channel.send(f"Please mind your manner!!! - {message.author.mention}")
+            print("Pesan buruk dihapus.")
+        except Exception as e:
+            print(f"Gagal menghapus/mengirim pesan peringatan: {e}")
+        return 
+
+    # 2. Fitur Chat AI (Tag/Mention)
+    if bot.user.mentioned_in(message):
+        print("Bot di-mention, memproses jawaban...")
+        clean_content = message.content.replace(f'<@!{bot.user.id}>', '').replace(f'<@{bot.user.id}>', '').strip()
+        
+        if clean_content == "":
+            await message.channel.send(f"Halo {message.author.mention}! Ada yang bisa saya bantu?")
+        else:
+            loading_msg = await message.reply("⏳ Memproses pertanyaanmu...")
+            try:
+                ai_response = await free_chat(clean_content)
+                content_to_send = ai_response.content if hasattr(ai_response, 'content') else ai_response
+                await message.reply(str(content_to_send))
+                await loading_msg.delete() 
+            except Exception as e:
+                print(f"Error AI: {e}")
+                await loading_msg.edit(content="Maaf, terjadi kendala teknis.")
 
     await bot.process_commands(message)
+    
 
-
-# Command: Simple greeting
 @bot.tree.command(
     name="chat_ai", description="chat ai about tips and trick of tehcnology"
 )
 async def chat_ai(interaction: discord.Interaction, question: str):
-    await interaction.response.send_message(f"Processing your question: {question}", ephemeral=True)
-    await interaction.response.send_message(
-        f"Hello {interaction.user.mention}! How can I assist you today?"
-    )
+    try:
+        await interaction.response.send_message(f"Processing your question: {question}", ephemeral=True)
+        ai_message = await free_chat(question)
+        await interaction.followup.send(str(ai_message.content))
+    except Exception as e:
+        await interaction.followup.send(f"An error occurred: {str(e)}", ephemeral=True)
 
 
 @bot.tree.command(name="research", description="research a topic")

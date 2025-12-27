@@ -11,5 +11,7 @@ if not os.getenv("OPENAI_API_KEY"):
     )
 
 
-def get_llm_model(temperature):
-    return ChatOpenAI(model="gpt-4o-mini-2024-07-18", temperature=temperature)
+def get_llm_model(temperature, model_name: str = "gpt-4o-mini-2024-07-18"):
+    return ChatOpenAI(model=model_name, 
+                      temperature=temperature,
+                      max_tokens=1500)
