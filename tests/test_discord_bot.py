@@ -2,7 +2,6 @@ import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 import discord
 from src.interface.discord.main import research, summary, poll, chat_ai
-import src.interface.discord.main as discord_main
 
 # Path target patching
 TARGET = 'src.interface.discord.main'
@@ -170,7 +169,7 @@ async def test_research_command_success(mock_interaction):
         
         mock_res.return_value = "Hasil riset mendalam."
         
-        await research.callback(mock_interaction, topic=topic, pdf_name=pdf_name)
+        await research.callback(mock_interaction, topic=topic, pdf_name=pdf_name) # type: ignore
 
         # Verifikasi
         mock_interaction.response.defer.assert_called_once_with(ephemeral=False)
@@ -190,7 +189,7 @@ async def test_summary_command_success(mock_interaction):
         
         mock_sum.return_value = mock_result
         
-        await summary.callback(mock_interaction, url=url)
+        await summary.callback(mock_interaction, url=url) # type: ignore
 
         # Verifikasi
         mock_interaction.response.defer.assert_called_once_with(ephemeral=False)
@@ -205,7 +204,7 @@ async def test_poll_command_logic(mock_interaction):
     mock_interaction.original_response.return_value = mock_poll_msg
     
     question = "Apakah hari ini cerah?"
-    await poll.callback(mock_interaction, question=question)
+    await poll.callback(mock_interaction, question=question) # type: ignore
     
     # Verifikasi embed
     assert mock_interaction.response.send_message.called

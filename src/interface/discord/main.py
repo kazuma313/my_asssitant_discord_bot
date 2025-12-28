@@ -32,20 +32,20 @@ async def on_member_join(member):
     await member.channel.send(f"Welcome to the server {member.name}")
   
 
-@bot.event
-async def on_message(message):
-    # Abaikan pesan dari bot itu sendiri
-    if message.author == bot.user:
-        return
-    print("-----------")
-    print(f"Content dibaca: '{message.content}'")
+# @bot.event
+# async def on_message(message):
+#     # Abaikan pesan dari bot itu sendiri
+#     if message.author == bot.user:
+#         return
+#     print("-----------")
+#     print(f"Content dibaca: '{message.content}'")
 
-    was_bad_word = await handle_bad_words(message)
-    if was_bad_word:
-        return # Berhenti di sini jika pesan sudah dihapus
+#     was_bad_word = await handle_bad_words(message)
+#     if was_bad_word:
+#         return # Berhenti di sini jika pesan sudah dihapus
 
-    await handle_ai_chat(message)
-    await bot.process_commands(message)
+#     await handle_ai_chat(message)
+#     await bot.process_commands(message)
     
 
 @bot.tree.command(

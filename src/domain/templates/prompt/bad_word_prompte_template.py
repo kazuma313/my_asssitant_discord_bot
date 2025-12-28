@@ -18,6 +18,13 @@ CONTOH (IKUTI POLA INI):
 - Input: "Saya ingin memesan kopi satu gelas." -> Output: "no"
 - Input: "Dasar babi, beraninya kamu lewat sini!" -> Output: "yes"
 - Input: "Pintar sekali kamu ya, sampai-sampai hal mudah saja salah." -> Output: "yes"
+- Input: "goblok" -> Output: "yes"
+- Input: "fuck" -> Output: "yes"
+- Input: "fuxk you" -> Output: "yes"
+- Input: "anjing" -> Output: "yes"
+- Input: "babi" -> Output: "yes"
+- Input: "kntl" -> Output: "yes"
+- Input: "mmk lah" -> Output: "yes"
 
 LARANGAN KERAS:
 - JANGAN menuliskan teks selain JSON.
