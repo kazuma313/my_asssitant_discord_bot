@@ -6,13 +6,17 @@ from .message import (send_summary_to_users,
 from src.application.usecases.calling_agent import (research_topic, 
                                                     youtube_summary,
                                                     free_chat)
-from src.application.services.keep_alive import keep_alive
+# from src.application.services.keep_alive import keep_alive
 from markdown_pdf import MarkdownPdf, Section
 from dotenv import load_dotenv
+import logging
 import discord
 import os
 
-keep_alive()
+handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
+token = os.getenv("DISCORD_TOKEN", "")
+
+# keep_alive()
 load_dotenv()
 
 pdf = MarkdownPdf(toc_level=2, optimize=True)
@@ -32,20 +36,20 @@ async def on_member_join(member):
     await member.channel.send(f"Welcome to the server {member.name}")
   
 
-# @bot.event
-# async def on_message(message):
-#     # Abaikan pesan dari bot itu sendiri
-#     if message.author == bot.user:
-#         return
-#     print("-----------")
-#     print(f"Content dibaca: '{message.content}'")
+@bot.event
+async def on_message(message):
+    # Abaikan pesan dari bot itu sendiri
+    if message.author == bot.user:
+        return
+    print("-----------")
+    print(f"Content dibaca: '{message.content}'")
 
-#     was_bad_word = await handle_bad_words(message)
-#     if was_bad_word:
-#         return # Berhenti di sini jika pesan sudah dihapus
+    was_bad_word = await handle_bad_words(message)
+    if was_bad_word:
+        return # Berhenti di sini jika pesan sudah dihapus
 
-#     await handle_ai_chat(message)
-#     await bot.process_commands(message)
+    await handle_ai_chat(message)
+    await bot.process_commands(message)
     
 
 @bot.tree.command(
@@ -111,3 +115,9 @@ async def poll(
     poll_message = await interaction.original_response()
     await poll_message.add_reaction("👍")
     await poll_message.add_reaction("👎")
+
+
+
+def main():
+    bot.run(token, log_handler=handler, log_level=logging.DEBUG)
+    print("Hello from my-asssitant-discord-bot!")

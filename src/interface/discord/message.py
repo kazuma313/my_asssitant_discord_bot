@@ -24,7 +24,7 @@ async def handle_bad_words(message):
         
         if str(is_bad_word).lower() == "yes":
             await message.delete()
-            await message.channel.send(f"Please mind your manner!!! - {message.author.mention}")
+            await message.channel.send(f"message:{message.content}, Please mind your manner!!! - {message.author.mention}")
             print("Pesan buruk dihapus.")
             return True # Berhasil mendeteksi bad word
     except Exception as e:
