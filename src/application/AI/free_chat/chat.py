@@ -1,6 +1,6 @@
 from langchain.messages import HumanMessage, SystemMessage
 from src.infrastructure.AI.models.llm import get_llm_model
-from src.domain.templates.prompt.free_chat_prompt_template import systems_chat_prompt
+from ...prompt.free_chat_prompt_template import systems_chat_prompt
 
 llm = get_llm_model(temperature=0.1)
 

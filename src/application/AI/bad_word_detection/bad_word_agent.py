@@ -1,4 +1,4 @@
-from src.domain.templates.prompt.bad_word_prompte_template import BAD_WORD_PROMPT
+from ...prompt.bad_word_prompte_template import BAD_WORD_PROMPT
 from src.domain.entities.agents.bad_word_entities import BadWordDetection
 from src.infrastructure.AI.models.llm import get_llm_model
 from langchain.agents import create_agent

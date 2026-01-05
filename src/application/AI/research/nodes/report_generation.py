@@ -10,7 +10,7 @@ from src.domain.entities.agents.research_entites import (
     SectionState,
 )
 
-from src.domain.templates.prompt.research_prompt_templates import (
+from ....prompt.research_prompt_templates import (
     DEFAULT_REPORT_STRUCTURE,
     REPORT_PLAN_QUERY_GENERATOR_PROMPT,
     REPORT_PLAN_SECTION_GENERATOR_PROMPT,

@@ -7,7 +7,7 @@ from src.domain.entities.agents.research_entites import (
     SectionOutputState,
     Queries,
 )
-from src.domain.templates.prompt.research_prompt_templates import (
+from ....prompt.research_prompt_templates import (
     REPORT_SECTION_QUERY_GENERATOR_PROMPT,
     SECTION_WRITER_PROMPT,
 )

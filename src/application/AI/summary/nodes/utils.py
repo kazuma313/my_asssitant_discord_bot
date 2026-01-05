@@ -1,4 +1,4 @@
-from src.domain.templates.prompt.summary_prompt_templates import reduce_prompt
+from ....prompt.summary_prompt_templates import reduce_prompt
 from langchain_core.documents import Document
 from langchain_openai import ChatOpenAI
 from typing import List
