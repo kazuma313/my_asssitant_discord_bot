@@ -1,4 +1,48 @@
-from fasthtml.common import (Form, Group, Input, Button, Hidden, Div, Label, H1)   
+from fasthtml.common import (Form, Group, Input, Button, Hidden, Div, Label, H1, A)   
+from .bars import Sidebar
+
+def MainLayout(*content, show_sidebar=True):
+    """
+    Main layout wrapper with navbar and optional sidebar
+    Usage: 
+        MainLayout(YourContentComponent())  # With sidebar
+        MainLayout(YourContentComponent(), show_sidebar=False)  # Without sidebar
+    """
+    return (
+        Div(cls="drawer lg:drawer-open" if show_sidebar else "drawer")( 
+            Input(id="my-drawer", type="checkbox", cls="drawer-toggle") if show_sidebar else None,
+            Div(cls="drawer-content flex flex-col h-screen bg-base-100")(
+                # Top bar
+                Div(cls="navbar bg-base-200 shadow-lg")(
+                    Div(cls="flex-1")(
+                        Label(htmlFor="my-drawer", cls="btn btn-ghost lg:hidden")(
+                            # Hamburger icon
+                            # Svg(xmlns="http://www.w3.org/2000/svg", cls="h-5 w-5", fill="none", viewBox="0 0 24 24", stroke="currentColor")(
+                            #     Path(stroke_linecap="round", stroke_linejoin="round", stroke_width="2", d="M4 6h16M4 12h16M4 18h16")
+                            # )
+                        ) if show_sidebar else None,
+                        H1(cls="text-xl font-bold ml-2")("Kurnia Zulda Matondang")
+                    ),
+                    Div(cls="flex-none gap-2")(
+                        # Computer Vision button
+                        A(href="/computer_vision", cls="btn btn-ghost")(
+                            "Computer Vision"
+                        ),
+                        # Profile button
+                        A(href="/profile", cls="btn btn-ghost")(
+                            "Profile"
+                        )
+                    )
+                ),
+                # Main content area
+                Div(cls="flex-1 overflow-auto")(
+                    *content  # Unpack content here
+                )
+            ),
+            Sidebar() if show_sidebar else None
+        )
+    )
+    
 
 def ChatInputForm(is_landing=False):
     if is_landing:
@@ -79,3 +123,18 @@ def ChatView(history_elements):
             Div("Chatbot can make mistakes.", cls="text-[10px] text-center mt-2 opacity-50")
         )
     )
+
+def ChatMessage(msg, user):
+    if user:
+        return Div(cls="flex justify-end mb-4 animate-in fade-in slide-in-from-bottom-2")(
+            Div(msg, cls="bg-primary text-primary-content py-3 px-5 rounded-3xl max-w-[80%] rounded-tr-md shadow-sm")
+        )
+    else:
+        return Div(cls="flex justify-start mb-4 items-start gap-3 animate-in fade-in slide-in-from-bottom-2")(
+            Div(cls="avatar placeholder")(
+                Div(cls="bg-accent text-accent-content rounded-full w-8 h-8 flex items-center justify-center font-bold text-xs")("AI")
+            ),
+            Div(cls="flex-1")(
+                Div(msg, cls="prose prose-sm dark:prose-invert max-w-none p-2")
+            )
+        )
