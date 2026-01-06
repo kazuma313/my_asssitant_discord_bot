@@ -1,4 +1,4 @@
-from fasthtml.common import (Form, Group, Input, Button, Hidden, Div, Label, H1, A)   
+from fasthtml.common import (Form, Group, Input, Button, Hidden, Div, Label, H1, A, H2, P, H3, Span, Ul, Li)   
 from .bars import Sidebar
 
 def MainLayout(*content, show_sidebar=True):
@@ -138,3 +138,4 @@ def ChatMessage(msg, user):
                 Div(msg, cls="prose prose-sm dark:prose-invert max-w-none p-2")
             )
         )
+

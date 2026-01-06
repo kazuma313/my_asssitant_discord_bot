@@ -1,6 +1,8 @@
-from fasthtml.common import (Div, serve, P, H2, FastHTML)
+from fasthtml.common import serve, FastHTML
 from .components.config import hdrs
 from .components.views import LandingView, ChatView, MainLayout, ChatMessage
+from .components.profile import ProfileView
+from .components.computer_vision import ComputerVisionView
 
 app = FastHTML(hdrs=hdrs)
 # app = FastHTMLWithLiveReload(hdrs=hdrs)
@@ -14,20 +16,14 @@ def index():
 @app.get("/computer_vision") # type: ignore
 def computer_vision():
     return MainLayout(
-        Div(cls="p-8")(
-            H2(cls="text-2xl font-bold")("Computer Vision"),
-            P()("Computer vision content goes here...")
-        ),
+        ComputerVisionView(),
         show_sidebar=False 
     )
 
 @app.get("/profile") # type: ignore
 def profile():
     return MainLayout(
-        Div(cls="p-8")(
-            H2(cls="text-2xl font-bold")("Profile"),
-            P()("Profile content goes here...")
-        ),
+        ProfileView(),
         show_sidebar=False
     )
 
