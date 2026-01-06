@@ -21,7 +21,7 @@ def MainLayout(*content, show_sidebar=True):
                             #     Path(stroke_linecap="round", stroke_linejoin="round", stroke_width="2", d="M4 6h16M4 12h16M4 18h16")
                             # )
                         ) if show_sidebar else None,
-                        H1(cls="text-xl font-bold ml-2")("Kurnia Zulda Matondang")
+                        A(cls="text-xl font-bold ml-2", href="/")("Kurnia Zulda Matondang")
                     ),
                     Div(cls="flex-none gap-2")(
                         # Computer Vision button
@@ -29,8 +29,8 @@ def MainLayout(*content, show_sidebar=True):
                             "Computer Vision"
                         ),
                         # Profile button
-                        A(href="/profile", cls="btn btn-ghost")(
-                            "Profile"
+                        A(href="/chatbot", cls="btn btn-ghost")(
+                            "chatbot"
                         )
                     )
                 ),

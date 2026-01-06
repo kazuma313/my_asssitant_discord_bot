@@ -9,7 +9,7 @@ app = FastHTML(hdrs=hdrs)
 
 messages_history = []
 
-@app.get("/") # type: ignore
+@app.get("/chatbot") # type: ignore
 def index():
     return MainLayout(LandingView()) 
     
@@ -20,7 +20,7 @@ def computer_vision():
         show_sidebar=False 
     )
 
-@app.get("/profile") # type: ignore
+@app.get("/") # type: ignore
 def profile():
     return MainLayout(
         ProfileView(),
