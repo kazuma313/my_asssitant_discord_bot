@@ -1,0 +1,143 @@
+graph TB
+    subgraph Interface["🌐 INTERFACE LAYER (Ports)"]
+        CLI[📱 CLI Interface]
+        Discord[💬 Discord Bot]
+        HTTP[🌍 HTTP API]
+        Web[🖥️ Web Interface]
+    end
+
+    subgraph Application["📦 APPLICATION LAYER"]
+        direction TB
+        subgraph AI_Features["🤖 AI Use Cases"]
+            BadWord[🚫 Bad Word Detection]
+            FreeChat[💭 Free Chat + Guardrails]
+            Research[🔍 Research]
+            Summary[📄 Summary]
+        end
+        
+        subgraph App_Services["⚙️ Application Services"]
+            Mappers[🗺️ Mappers/DTOs]
+            Prompt[📝 Prompt Handler]
+            Services[🔄 Service Orchestrator]
+        end
+    end
+
+    subgraph Domain["🏛️ DOMAIN LAYER (Business Logic)"]
+        direction TB
+        DomainModels[📋 Domain Models]
+        DomainRules[⚖️ Business Rules]
+        DomainServices[🎯 Domain Services]
+        UseCases[📌 Use Cases Interface]
+    end
+
+    subgraph Infrastructure["🔩 INFRASTRUCTURE LAYER (Adapters)"]
+        direction TB
+        subgraph AI_Infrastructure["🤖 AI Infrastructure"]
+            Memory[🧠 Memory Management]
+            Models[🎲 AI Models]
+            Tools[🔧 AI Tools]
+        end
+        
+        subgraph External["🌐 External Adapters"]
+            Connections[🔌 API Connections]
+            Database[💾 Database]
+            ExternalAPI[📡 External APIs]
+        end
+        
+        subgraph Config["⚙️ Configuration"]
+            Logging[📋 Logging Config]
+            Init[🚀 Initialization]
+        end
+    end
+
+    %% Interface to Application
+    CLI --> Mappers
+    Discord --> Mappers
+    HTTP --> Mappers
+    Web --> Mappers
+
+    %% Application Layer Internal Flow
+    Mappers --> Prompt
+    Prompt --> Services
+    Services --> BadWord
+    Services --> FreeChat
+    Services --> Research
+    Services --> Summary
+
+    %% Application to Domain (dependency inversion)
+    BadWord -.->|implements| UseCases
+    FreeChat -.->|implements| UseCases
+    Research -.->|implements| UseCases
+    Summary -.->|implements| UseCases
+
+    %% Domain Internal
+    UseCases --> DomainServices
+    DomainServices --> DomainModels
+    DomainServices --> DomainRules
+
+    %% Application to Infrastructure (dependency injection)
+    BadWord --> Memory
+    BadWord --> Models
+    BadWord --> Tools
+    
+    FreeChat --> Memory
+    FreeChat --> Models
+    FreeChat --> Tools
+    
+    Research --> Memory
+    Research --> Models
+    Research --> Tools
+    
+    Summary --> Memory
+    Summary --> Models
+    Summary --> Tools
+
+    %% Infrastructure Dependencies
+    Memory --> Database
+    Models --> Connections
+    Tools --> Connections
+    Tools --> ExternalAPI
+
+    %% Logging
+    BadWord -.-> Logging
+    FreeChat -.-> Logging
+    Research -.-> Logging
+    Summary -.-> Logging
+    Services -.-> Logging
+
+    %% Infrastructure Setup
+    Init --> Database
+    Init --> Connections
+    Init --> Models
+
+    %% Request Flow Example
+    CLI -.->|"1. User Request"| Mappers
+    Mappers -.->|"2. Map to DTO"| Prompt
+    Prompt -.->|"3. Parse Prompt"| Services
+    Services -.->|"4. Route to Use Case"| FreeChat
+    FreeChat -.->|"5. Use Domain Rules"| DomainServices
+    FreeChat -.->|"6. Call AI Infrastructure"| Models
+    Models -.->|"7. Execute AI"| Connections
+    Connections -.->|"8. Return Result"| Models
+    Models -.->|"9. Process Response"| FreeChat
+    FreeChat -.->|"10. Apply Business Logic"| DomainServices
+    DomainServices -.->|"11. Return to Use Case"| FreeChat
+    FreeChat -.->|"12. Format Response"| Services
+    Services -.->|"13. Map to Output"| Mappers
+    Mappers -.->|"14. Send to User"| CLI
+
+    %% Style Notes
+    Note1[/"📝 NOTE: AI Features di Application Layer<br/>karena mereka adalah Use Cases<br/>yang mengorkestra domain & infrastructure"/]
+    Note1 -.-> Application
+
+    classDef interfaceStyle fill:#4A90E2,stroke:#2E5C8A,stroke-width:2px,color:#fff
+    classDef applicationStyle fill:#50C878,stroke:#2D7A4F,stroke-width:2px,color:#fff
+    classDef domainStyle fill:#FF6B6B,stroke:#C44545,stroke-width:2px,color:#fff
+    classDef infraStyle fill:#FFD93D,stroke:#C4A82E,stroke-width:2px,color:#333
+    classDef noteStyle fill:#E8E8E8,stroke:#999,stroke-width:1px,color:#333
+
+    class CLI,Discord,HTTP,Web interfaceStyle
+    class BadWord,FreeChat,Research,Summary,Mappers,Prompt,Services applicationStyle
+    class DomainModels,DomainRules,DomainServices,UseCases domainStyle
+    class Memory,Models,Tools,Connections,Database,ExternalAPI,Logging,Init infraStyle
+    class Note1 noteStyle

@@ -1,10 +1,15 @@
-from fasthtml.common import serve, FastHTML
+from fasthtml.common import serve, FastHTML, FileResponse
 from .components.config import hdrs
 from .components.views import LandingView, ChatView, MainLayout, ChatMessage
 from .components.profile import ProfileView
 from .components.computer_vision import ComputerVisionView
+from pathlib import Path
 
-app = FastHTML(hdrs=hdrs)
+BASE_DIR = Path(__file__).parent.resolve()
+ASSETS_DIR = BASE_DIR / "assets"
+
+app = FastHTML(hdrs=hdrs,
+               static_path=str(ASSETS_DIR))
 # app = FastHTMLWithLiveReload(hdrs=hdrs)
 
 messages_history = []
@@ -12,7 +17,16 @@ messages_history = []
 @app.get("/chatbot") # type: ignore
 def index():
     return MainLayout(LandingView()) 
-    
+
+
+@app.get("/assets/{fname:path}") # type: ignore
+def serve_assets(fname: str):
+    file_path = ASSETS_DIR / fname
+    if file_path.exists():
+        return FileResponse(file_path)
+    return "", 404
+
+
 @app.get("/computer_vision") # type: ignore
 def computer_vision():
     return MainLayout(

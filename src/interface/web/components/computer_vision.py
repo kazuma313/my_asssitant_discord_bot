@@ -43,12 +43,16 @@ def cv_hero_section_1():
                 )
             ),
             
-            # Right side - Featured video/image
+            # Right side - Video player
             Div(cls="lg:sticky lg:top-8")(
-                Div(cls="bg-slate-800 rounded-2xl overflow-hidden border-2 border-blue-500 shadow-2xl aspect-video flex items-center justify-center")(
-                    Div(cls="text-center p-12")(
-                        Div(cls="text-7xl mb-4")("👷"),
-                        P(cls="text-gray-400 text-xl")("Worker Activity Demo")
+                Div(cls="bg-slate-800 rounded-2xl overflow-hidden border-2 border-blue-500 shadow-2xl aspect-video")(
+                    Video(
+                        src="/assets/videos/worker.mp4",  # ✅ Use relative path from static directory
+                        autoplay=True,
+                        loop=True,
+                        muted=True,
+                        playsinline=True,
+                        cls="w-full h-full object-cover"
                     )
                 )
             )
